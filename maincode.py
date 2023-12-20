@@ -63,7 +63,8 @@ class ChartDims( PredefinedCharts ):
         super().__init__(height , width , horizontal , vertical , padding, navbar , footer , sidenav)
         
         self.outer_space = padding
-        self.canvas_new_height =  self.height - (((self.vertical * 2) + (self.outer_space * 2) + self.navbar_height) + self.footer_height)
+        self.canvas_new_height =  self.height - (self.navbar_height + self.footer_height + (self.outer_space * 2))  
+        #self.canvas_new_height =  self.height - (((self.vertical * 2) + (self.outer_space * 2) + self.navbar_height) + self.footer_height) 
         self.canvas_new_width = ((self.width - self.horizontal) -  (self.side_nav_width + self.horizontal)) - (self.outer_space *2) 
         self.canvas_new_horizontal = self.horizontal + self.side_nav_width + self.outer_space    
         self.canvas_new_vertical = (self.vertical + self.navbar_height) + self.outer_space
@@ -106,7 +107,7 @@ class ChartDims( PredefinedCharts ):
 
         print("\nInner Canvas Dims:")
         #print(f"Your canvas is a table with: {self.columns} Columns and {self.rows} Rows for a total of {self.columns * self.rows } grids") 
-        print(tabulate([[rows , columns , spacing , rows*columns]] , headers=["Total Rows:" , "Total Columns" , "Spacing in Between:" , "Total Grids:"]))
+        print(tabulate([[rows , columns , spacing , rows*columns]] , headers=["Total Rows:" , "Total Columns" , "Spacing in Between:" , "Total Grids:"] , tablefmt="grid"))
         print(tabulate(self.inner_table_values , headers=self.inner_table_headers , tablefmt="grid"))
         
 

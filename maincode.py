@@ -113,11 +113,12 @@ class ChartDims( PredefinedCharts ):
 
 def canvas_data():
     system('cls')
+    #invoking the function who receives the data for the main Canvas dims
     main_canvas = canvas_intake()
+    #invoking the function that asks if we are going to use a Navbar , footer or sidenav
     predefined_sections = predefine_layouts()
-    
 
-    print(main_canvas , predefined_sections)
+    #generate the instance in the Class to start the calculations
     create_main_canvas = ChartDims(main_canvas[0] , #height 
                                     main_canvas[1] , #width
                                     main_canvas[2] , #horizontal
@@ -128,11 +129,20 @@ def canvas_data():
                                         predefined_sections[2]  #sidenav
                                         )
     
+    #let's print the results
     print("Canvas Calculations Results: ")
+
+    #calling the method that display the canvas information
     create_main_canvas.canvas_information()
+    #calling the function that asks for rows, columns and spacing in the Inner Canvas
     inner_canvas = inner_canvas_grid_and_spacing()
+    
+    #time to print the first part of the results
+    system('cls')
+    create_main_canvas.canvas_information()
     create_main_canvas.inner_canvas(inner_canvas[0] , inner_canvas[1] , inner_canvas[2])
     
+    #call the function to check if the user wants to modify the Canvas 
     modify_canvas(main_canvas[0] , #height 
                     main_canvas[1] , #width
                      main_canvas[2] , #horizontal
@@ -145,15 +155,26 @@ def canvas_data():
                           inner_canvas[1],#columns
                           inner_canvas[2]#spacing
                             )#end of the modify canvas function call
+    
+
+  #  if modify_data == "completed":
+   #     calculate_charts = input("Would you like to calculate charts ?: Y/N")
+    #    while calculate_charts.lower() == "y":
+     #       start_column = int(input("Which column do you want to start ?"))
+      #      end_column = int(input("Which column do you want to end ? "))
+       #     start_row = int(input("Which Row do you want to start ?"))
+        #    end_row = int(input("Which row do you want to end"))
+            
      
 
+#This function modifies the canvas based on the new input we provide
 def modify_canvas(height , width , horizontal , vertical , padding , navbar , footer , side_nav , rows , columns , spacing):
     new_Canvas_data = [height,width, horizontal , vertical , padding ]
     new_predefined_layout = [navbar , footer , side_nav]
     new_inner_canvas = [rows , columns , spacing]
     modifier = False
   
-    modify_canvas = input("Would you like to modify the Canvas ? Y/N: ")
+    modify_canvas = validate_input_y_n("Would you like to modify the Canvas ? Y/N: ")
     if modify_canvas.lower() == "y":
         modifier = True    
     while modify_canvas.lower() == "y":     
@@ -202,8 +223,6 @@ def modify_canvas(height , width , horizontal , vertical , padding , navbar , fo
             new_inner_canvas = []
             for item in inner_modified_values:
                 new_inner_canvas.append(item)
-            
-        
                 
         #else the option is incorrect 
         else:
@@ -220,30 +239,59 @@ def modify_canvas(height , width , horizontal , vertical , padding , navbar , fo
      
         modified_canvas.canvas_information()
         modified_canvas.inner_canvas(new_inner_canvas[0] , new_inner_canvas[1] , new_inner_canvas[2])
-        modify_canvas = input("Would you like to do another modification ? Y/N: ")
+        modify_canvas = validate_input_y_n("Would you like to do another modification ? Y/N: ")
+    return "completed"
          
             
 
 ##This function captures the main Canvas dims 
 def canvas_intake():
     
-    height = int(input("Enter the Canvas Height: "))
-    width = int(input("Enter the Canvas Width: "))
-    horizontal = int(input("Enter horizontal Position of the Canvas: "))
-    vertical = int(input("Enter vertical Position of the Canvas: "))
-    padding = int(input("Enter the Padding would like to use for this Dashboard:  "))
+    height = int(validate_only_numbers("Enter the Canvas Height: "))
+    width = int(validate_only_numbers("Enter the Canvas Width: "))
+    horizontal = int(validate_only_numbers("Enter horizontal Position of the Canvas: "))
+    vertical = int(validate_only_numbers("Enter vertical Position of the Canvas: "))
+    padding = int(validate_only_numbers("Enter the Padding would like to use for this Dashboard:  "))
     return [height , width , horizontal , vertical , padding ]
 
 
+#This function receives a message and returns a Y or N it will stop until the user enters any of these letters
+
+def validate_input_y_n(message):
+    user_validated = False
+    
+    while user_validated == False:
+        user_message = input(message)
+        if user_message.lower() != "y" and user_message.lower() != "n":
+            user_validated = False
+        else:
+            user_validated = True
+            break
+    return user_message
+
+#This function only evaluate numbers when they are sent to the function optherwise it will repeat until the user types a number
+def validate_only_numbers(message):
+    user_validated = False
+    
+    while user_validated == False:
+        user_input = input(message)
+        if not user_input.isdigit():
+            user_validated = False
+        else:
+            user_validated = True
+    return user_input
+    
 
 ##This function captures the data for the predefined layouts and sends the data to the class if an item is activated or deactivated 
 def predefine_layouts():
-    predefined_layouts = input("Are you using a Navbar, Footer , side_nav ? Y/N: ")
     
+
+    predefined_layouts = validate_input_y_n("Are you using a Navbar, Footer , side_nav ? Y/N: ")
+
     if predefined_layouts.lower() == 'y':
-        navbar = input("Are you using a Navbar ? Y/N: ")
-        footer = input("Are you using a Footer ? Y/N: ")
-        side_nav = input("Are you using a Side navigation Pane ? Y/N: ") 
+        navbar = validate_input_y_n("Are you using a Navbar ? Y/N: ")
+        footer = validate_input_y_n("Are you using a Footer ? Y/N: ")
+        side_nav = validate_input_y_n("Are you using a Side navigation Pane ? Y/N: ") 
     else:
         navbar = "n"
         footer = "n"
@@ -254,9 +302,9 @@ def predefine_layouts():
 
 def inner_canvas_grid_and_spacing():
 
-    rows = int(input("How many Rows do you want in your Canvas ?: "))
-    columns = int(input("How many Columns do you want in your Canvas ?: "))
-    space = int(input("Space in between ?: ")) 
+    rows = int(validate_only_numbers("How many Rows do you want in your Canvas ?: "))
+    columns = int(validate_only_numbers("How many Columns do you want in your Canvas ?: "))
+    space = int(validate_only_numbers("Space in between ?: ")) 
     return [rows , columns , space] 
 
     
